@@ -40,6 +40,12 @@ TSIP_BEGIN_DECLS
 
 #define TSIP_DIALOG_INVITE(self)							((tsip_dialog_invite_t*)(self))
 
+typedef struct rtp_port_range_s {
+    uint16_t start;
+    uint16_t stop;
+}
+rtp_port_range_t;
+
 typedef struct tsip_dialog_invite {
     TSIP_DECLARE_DIALOG;
 
@@ -51,6 +57,7 @@ typedef struct tsip_dialog_invite {
     tsk_bool_t use_rtcpmux;
     tsk_bool_t is_initial_iack_pending; // we're waiting for the initial incoming ACK (for the 200 OK) to ensure the session
     tsk_bool_t is_cancelling; // whether we're cancelling the outgoing INVITE
+    tsk_bool_t is_conditional_ringing_enabled; // whether to ask end-user before sending 18x ringing message
     uint32_t rseq;
     uint32_t cseq_out_media_update; // CSeq for the last media update request (INVITE or UPDATE).
     uint64_t last_out_fastupdate_time;
@@ -113,6 +120,8 @@ typedef struct tsip_dialog_invite {
         unsigned norefersub;
         unsigned ice:1;
     } required;
+    
+    rtp_port_range_t rtp_port_range;
 }
 tsip_dialog_invite_t;
 
